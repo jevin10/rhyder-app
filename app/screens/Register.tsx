@@ -8,9 +8,10 @@ import AppLoading from 'expo-app-loading';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 
-const Login = () => {
+const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -32,9 +33,6 @@ const Login = () => {
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
             console.log(response);
-            if (response.user.emailVerified) {
-                navigation.navigate('Inside' as never);
-            }
         } catch (error: any) {
             console.log(error);
             alert('Incorrect email or password!');
@@ -72,10 +70,7 @@ const Login = () => {
     return (
         <View style={styles.container}>
             <View style={styles.container2}>
-                <KeyboardAvoidingView behavior="padding">
-                    <View style={styles.logoContainer}>
-                        <Text style={styles.logo}>RHYDER</Text>
-                    </View>
+                <KeyboardAvoidingView behavior="height">
                     <View style={styles.inputContainer}>
                         <View style={styles.inputSection}>
                             <Entypo style={styles.inputIcon} name="email" size={20} color="#383838" />
@@ -108,17 +103,25 @@ const Login = () => {
                     ) : ( <>
                             <Pressable 
                                 style={styles.button} 
-                                onPress={signIn}>
-                                    <Text style={styles.buttonText}>Login</Text>
+                                onPress={signUp}>
+                                    <Text style={styles.buttonText}>Create Account</Text>
                             </Pressable>
-                            <Pressable
-                                onPress={forgotPasswordAction}>
-                                <Text style={styles.forgotPassword}>Forgot password?</Text>
-                            </Pressable>
+                            <View style={styles.socialsContainer}>
+                              <Pressable 
+                                  style={styles.socialsButton} 
+                                  onPress={signUp}>
+                                      <Text style={styles.socialsButtonText}>Sign in with Google</Text>
+                              </Pressable>
+                              <Pressable 
+                                  style={styles.socialsButton} 
+                                  onPress={signUp}>
+                                      <Text style={styles.socialsButtonText}>Sign in with Apple</Text>
+                              </Pressable>
+                            </View>
                             <Pressable 
-                                style={styles.registerButton} 
-                                onPress={() => navigation.navigate('Register' as never)}>
-                                <Text style={styles.registerButtonText}>Don't have an account? <Text style={ styles.registerButtonText2 }>Sign Up</Text></Text>
+                                style={styles.goBackButton} 
+                                onPress={() => navigation.navigate('Login' as never)}>
+                                <Text style={styles.buttonText}>Return to Login</Text>
                             </Pressable>
                         </>
                     )}
@@ -128,7 +131,7 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;
 
 const styles = StyleSheet.create({
     container: {
@@ -173,6 +176,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    socialsContainer: {
+        marginVertical: 20,
+    },
     inputSection: {
         flex: 1, 
         flexDirection: 'row',
@@ -192,26 +198,27 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         elevation: 0,
     },
-    registerButton: {
+    socialsButton: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingBottom: 12,
+        height: 50,
+        paddingVertical: 12,
         paddingHorizontal: 32,
-        paddingTop: 24,
+        borderRadius: 30,
+        borderWidth: 2,
+        marginVertical: 10,
+        elevation: 0,
+        borderColor: '#1B7670',
+    },
+    goBackButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 50,
+        paddingVertical: 12,
+        paddingHorizontal: 32,
         borderRadius: 30,
         marginVertical: 10,
         elevation: 0,
-    },
-    registerButtonText: {
-        fontSize: 16,
-        lineHeight: 21,
-        color: '#383838',
-    },
-    registerButtonText2: {
-        fontSize: 16,
-        lineHeight: 21,
-        fontWeight: 'bold',
-        color: '#1B7670',
     },
     buttonText: {
         fontSize: 20,
@@ -219,6 +226,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: '#383838',
+    },
+    socialsButtonText: {
+        fontSize: 20,
+        lineHeight: 21,
+        letterSpacing: 0.25,
+        color: '#1B7670', 
     },
     inputIcon: {
         padding: 10,
